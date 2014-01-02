@@ -3,10 +3,13 @@
 #include "cm_impl.h"
 
 int handle_create(char names[10][20], char addresses[10][200], 
-		char phoneNumbers[10][10], char *argv[], int curLength) {
-	strcpy(names[curLength], argv[2]);
-	strcpy(addresses[curLength], argv[3]);
-	strcpy(phoneNumbers[curLength], argv[4]);
+		char phoneNumbers[10][10], 
+		char* newName, char* newAddress, char* newPhone,
+		int curLength) 
+{
+	strcpy(names[curLength], newName);
+	strcpy(addresses[curLength], newAddress);
+	strcpy(phoneNumbers[curLength], newPhone);
 
 	curLength++;
 
@@ -16,19 +19,23 @@ int handle_create(char names[10][20], char addresses[10][200],
 }
 
 void handle_update(char names[10][20], char addresses[10][200], 
-	char phoneNumbers[10][10], char *argv[], int curLength) {
-	int item = atoi(argv[2]) - 1;
+	char phoneNumbers[10][10], 
+	char* newName, char* newAddress, char* newPhone, char* index,
+	int curLength) 
+{
+	int item = atoi(index) - 1;
 
-	strcpy(names[item], argv[3]);
-	strcpy(addresses[item], argv[4]);
-	strcpy(phoneNumbers[item], argv[5]);
+	strcpy(names[item], newName);
+	strcpy(addresses[item], newAddress);
+	strcpy(phoneNumbers[item], newPhone);
 
 	save_contacts(names, addresses, phoneNumbers, curLength);
 }
 
 int handle_delete(char names[10][20], char addresses[10][200], 
-	char phoneNumbers[10][10], char *argv[], int curLength) {
-	int item = atoi(argv[2]) - 1;
+	char phoneNumbers[10][10], char* index, int curLength) 
+{
+	int item = atoi(index) - 1;
 	int i;
 	for (i = item - 1; i++; i < curLength) {
 		strcpy(names[i], names[i + 1]);
@@ -42,15 +49,16 @@ int handle_delete(char names[10][20], char addresses[10][200],
 }
 
 void handle_retrieve(char names[10][20], char addresses[10][200], 
-	char phoneNumbers[10][10], char *argv[]) {
-	int item = atoi(argv[2]);
+	char phoneNumbers[10][10], char* index) 
+{
+	int item = atoi(index) - 1;
 	printf(names[item]);
 	printf(addresses[item]);
 	printf(phoneNumbers[item]);
 }
 
 void handle_list(char names[10][20], char addresses[10][200], 
-		char phoneNumbers[10][10], char *argv[], int curLength) {
+		char phoneNumbers[10][10], int curLength) {
 	int i;
 	for (i = 0; i < curLength; i++) 
 	{
@@ -84,13 +92,13 @@ int load_contacts(char names[10][20], char addresses[10][200], char phoneNumbers
 
 	int i;
 	for (i = 0; i < numItems; i++) {
-		fscanf(infile, "%s", names[i]);	
+		fgets(names[i], 20, infile);	
 	}
 	for (i = 0; i < numItems; i++) {
-		fscanf(infile, "%s", addresses[i]);
+		fgets(addresses[i], 200, infile);	
 	}
 	for (i = 0; i < numItems; i++) {
-		fscanf(infile, "%s", phoneNumbers[i]);
+		fgets(phoneNumbers[i], 10, infile);	
 	}
 
 	fclose(infile);
@@ -110,15 +118,12 @@ void save_contacts(char names[10][20], char addresses[10][200], char phoneNumber
 	int i;
 	for (i = 0; i < numItems; i++) {
 		fputs(names[i], outfile);
-		fputs("\n", outfile);
 	}
 	for (i = 0; i < numItems; i++) {
 		fputs(addresses[i], outfile);
-		fputs("\n", outfile);
 	}
 	for (i = 0; i < numItems; i++) {
 		fputs(phoneNumbers[i], outfile);
-		fputs("\n", outfile);
 	}
 
 	fclose(outfile);

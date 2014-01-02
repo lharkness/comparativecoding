@@ -1,20 +1,20 @@
 #include <stdio.h>
 
-char get_user_input();
+void display_menu();
 
 int main ( int argc, char *argv[] )
 {
-    char input;
+    char input[80];
     do 
     {
-        input = get_user_input();
-        printf("%c", input);
-        handle_command(input);
+        display_menu();
+        get_user_input("Enter Option:", input);
+        handle_command(input[0]);
     }
-    while (input != 'Q');
+    while (input[0] != 'Q');
 }
 
-char get_user_input() 
+void display_menu() 
 {
     printf("%s", "[C]reate\n");
     printf("%s", "[R]etrieve\n");
@@ -25,9 +25,4 @@ char get_user_input()
     printf("%s", "[Q]uit\n");
 
     printf("\n");
-    printf("Enter Option: ");
-    char input;
-    scanf("%c", &input);
-
-    return input;
 }
